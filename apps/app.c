@@ -6,7 +6,7 @@
  *   文件名称：app.c
  *   创 建 者：肖飞
  *   创建日期：2019年10月11日 星期五 16时54分03秒
- *   修改日期：2022年08月12日 星期五 10时08分37秒
+ *   修改日期：2022年08月12日 星期五 10时22分51秒
  *   描    述：
  *
  *================================================================*/
@@ -50,22 +50,6 @@ static os_signal_t app_event = NULL;
 app_info_t *get_app_info(void)
 {
 	return app_info;
-}
-
-int app_load_config(void)
-{
-	config_layout_t *config_layout = get_config_layout();
-	size_t offset = (size_t)&config_layout->mechine_info_seg.storage_mechine_info.mechine_info;
-	debug("offset:%d", offset);
-	return load_config_item(app_info->storage_info, "eva", &app_info->mechine_info, sizeof(mechine_info_t), offset);
-}
-
-int app_save_config(void)
-{
-	config_layout_t *config_layout = get_config_layout();
-	size_t offset = (size_t)&config_layout->mechine_info_seg.storage_mechine_info.mechine_info;
-	debug("offset:%d", offset);
-	return save_config_item(app_info->storage_info, "eva", &app_info->mechine_info, sizeof(mechine_info_t), offset);
 }
 
 static void app_event_init(size_t size)
@@ -170,38 +154,16 @@ void app(void const *argument)
 
 	OS_ASSERT(app_info != NULL);
 
-	app_info->storage_info = get_or_alloc_storage_info(&hspi3);
-	OS_ASSERT(app_info->storage_info != NULL);
-
-	ret = app_load_config();
-
-	if(ret == 0) {
-		debug("app load config successful!");
-		reset_config = app_info->mechine_info.reset_config;
-
-		if(app_get_reset_config() != 0) {
-			debug("try to reset config!");
-			ret = -1;
-		}
-	} else {
-		debug("app load config failed!");
-	}
-
-	if(ret == 0) {
-		debug("device id:\'%s\', server uri:\'%s\'!", app_info->mechine_info.device_id, app_info->mechine_info.uri);
-	} else {
-		snprintf(app_info->mechine_info.device_id, sizeof(app_info->mechine_info.device_id), "%s", "0000000000");
-		snprintf(app_info->mechine_info.uri, sizeof(app_info->mechine_info.uri), "%s", "tcp://112.74.40.227:12345");
-		debug("device id:\'%s\', server uri:\'%s\'!", app_info->mechine_info.device_id, app_info->mechine_info.uri);
-		snprintf(app_info->mechine_info.ip, sizeof(app_info->mechine_info.ip), "%d.%d.%d.%d", 10, 42, 0, 122);
-		snprintf(app_info->mechine_info.sn, sizeof(app_info->mechine_info.sn), "%d.%d.%d.%d", 255, 255, 255, 0);
-		snprintf(app_info->mechine_info.gw, sizeof(app_info->mechine_info.gw), "%d.%d.%d.%d", 10, 42, 0, 1);
-		app_info->mechine_info.dhcp_enable = 1;
-		app_info->mechine_info.request_type = REQUEST_TYPE_SSE;
-		app_info->mechine_info.reset_config = 0;
-		app_info->mechine_info.tz = 8;
-		app_save_config();
-	}
+	snprintf(app_info->mechine_info.device_id, sizeof(app_info->mechine_info.device_id), "%s", "0000000000");
+	snprintf(app_info->mechine_info.uri, sizeof(app_info->mechine_info.uri), "%s", "tcp://112.74.40.227:12345");
+	debug("device id:\'%s\', server uri:\'%s\'!", app_info->mechine_info.device_id, app_info->mechine_info.uri);
+	snprintf(app_info->mechine_info.ip, sizeof(app_info->mechine_info.ip), "%d.%d.%d.%d", 10, 42, 0, 122);
+	snprintf(app_info->mechine_info.sn, sizeof(app_info->mechine_info.sn), "%d.%d.%d.%d", 255, 255, 255, 0);
+	snprintf(app_info->mechine_info.gw, sizeof(app_info->mechine_info.gw), "%d.%d.%d.%d", 10, 42, 0, 1);
+	app_info->mechine_info.dhcp_enable = 1;
+	app_info->mechine_info.request_type = REQUEST_TYPE_SSE;
+	app_info->mechine_info.reset_config = 0;
+	app_info->mechine_info.tz = 8;
 
 
 	//update_network_ip_config(app_info);

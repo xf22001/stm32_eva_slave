@@ -6,7 +6,7 @@
 #   文件名称：user.mk
 #   创 建 者：肖飞
 #   创建日期：2019年10月25日 星期五 13时04分38秒
-#   修改日期：2022年08月11日 星期四 17时15分46秒
+#   修改日期：2022年08月12日 星期五 10时25分32秒
 #   描    述：
 #
 #================================================================
@@ -40,13 +40,11 @@ USER_C_SOURCES += apps/uart_debug_handler.c
 USER_C_SOURCES += apps/probe_tool_handler.c
 USER_C_SOURCES += apps/channels_config.c
 USER_C_SOURCES += apps/can_config.c
-USER_C_SOURCES += apps/storage_config.c
 USER_C_SOURCES += apps/gpio_map.c
 ifneq ($(call ifdef_any_of,ENABLE_CXX),)
 USER_CPP_SOURCES += apps/modules/tests/test_cpp.cpp
 endif
 
-USER_C_SOURCES += apps/modules/app/config_utils.c
 USER_C_SOURCES += apps/modules/app/poll_loop.c
 USER_C_SOURCES += apps/modules/app/request.c
 USER_C_SOURCES += apps/modules/app/probe_tool.c
@@ -135,7 +133,6 @@ USER_C_SOURCES += apps/modules/app/charger/energy_meter_handler_ac.c
 USER_C_SOURCES += apps/modules/app/charger/energy_meter_handler_ac_hlw8032.c
 USER_C_SOURCES += apps/modules/app/charger/energy_meter_handler_ac_sdm_220.c
 USER_C_SOURCES += apps/modules/app/charger/energy_meter_handler_ac_sdm_630.c
-USER_C_SOURCES += apps/modules/app/charger/channel_record.c
 ifneq ($(call ifdef_any_of,CHARGER_CHANNEL_PROXY_REMOTE),)
 USER_C_SOURCES += apps/modules/app/charger/channels_comm_proxy_remote.c
 endif
@@ -148,16 +145,6 @@ USER_C_SOURCES += apps/modules/hardware/hw_adc.c
 USER_C_SOURCES += apps/modules/hardware/modbus_slave_txrx.c
 USER_C_SOURCES += apps/modules/hardware/modbus_master_txrx.c
 USER_C_SOURCES += apps/modules/hardware/modbus_spec.c
-USER_C_SOURCES += apps/modules/hardware/storage.c
-ifneq ($(call ifdef_any_of,STORAGE_OPS_25LC1024),)
-USER_C_SOURCES += apps/modules/hardware/storage_25lc1024.c
-endif
-ifneq ($(call ifdef_any_of,STORAGE_OPS_24LC128),)
-USER_C_SOURCES += apps/modules/hardware/storage_24lc128.c
-endif
-ifneq ($(call ifdef_any_of,STORAGE_OPS_W25Q256),)
-USER_C_SOURCES += apps/modules/hardware/storage_w25q256.c
-endif
 USER_C_SOURCES += apps/modules/drivers/spi_txrx.c
 USER_C_SOURCES += apps/modules/drivers/can_txrx.c
 USER_C_SOURCES += apps/modules/drivers/can_ops_hal.c
@@ -178,7 +165,6 @@ USER_CPP_SOURCES += apps/modules/os/cxx/override.cpp
 endif
 USER_C_SOURCES += apps/modules/tests/test_serial.c
 USER_C_SOURCES += apps/modules/tests/test_event.c
-USER_C_SOURCES += apps/modules/tests/test_storage.c
 USER_C_SOURCES += cJSON/cJSON.c
 
 USER_CFLAGS += -DtraceTASK_SWITCHED_IN=StartIdleMonitor -DtraceTASK_SWITCHED_OUT=EndIdleMonitor

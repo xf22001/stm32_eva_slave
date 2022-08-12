@@ -6,7 +6,7 @@
  *   文件名称：probe_tool_handler.c
  *   创 建 者：肖飞
  *   创建日期：2020年03月20日 星期五 12时48分07秒
- *   修改日期：2022年08月11日 星期四 16时44分53秒
+ *   修改日期：2022年08月12日 星期五 10时23分30秒
  *   描    述：
  *
  *================================================================*/
@@ -305,7 +305,6 @@ static void fn6(request_t *request)
 	set_client_state(net_client_info, CLIENT_REINIT);
 }
 
-#include "test_storage.h"
 static void fn7(request_t *request)
 {
 	char *content = (char *)(request + 1);
@@ -319,31 +318,6 @@ static void fn7(request_t *request)
 	ret = sscanf(content, "%d %d %d %d%n", &fn, &op, &start, &size, &catched);
 
 	if(ret == 4) {
-		app_info_t *app_info = get_app_info();
-
-		OS_ASSERT(app_info->storage_info != NULL);
-
-		switch(op) {
-			case 0: {
-				test_storage_check(app_info->storage_info, start, size);
-			}
-			break;
-
-			case 1: {
-				test_storage_read(app_info->storage_info, start, size);
-			}
-			break;
-
-			case 2: {
-				test_storage_write(app_info->storage_info, start, size);
-			}
-			break;
-
-			default: {
-			}
-			break;
-		}
-
 	}
 }
 

@@ -6,7 +6,7 @@
  *   文件名称：app.h
  *   创 建 者：肖飞
  *   创建日期：2019年10月11日 星期五 16时56分29秒
- *   修改日期：2021年12月06日 星期一 10时11分46秒
+ *   修改日期：2022年08月12日 星期五 10时22分16秒
  *   描    述：
  *
  *================================================================*/
@@ -52,7 +52,6 @@ typedef struct {
 
 typedef struct {
 	mechine_info_t mechine_info;
-	storage_info_t *storage_info;
 } app_info_t;
 
 typedef enum {
