@@ -6,7 +6,7 @@
  *   文件名称：uart_debug_handler.c
  *   创 建 者：肖飞
  *   创建日期：2020年05月13日 星期三 13时18分00秒
- *   修改日期：2021年08月05日 星期四 14时17分49秒
+ *   修改日期：2022年04月20日 星期三 15时03分06秒
  *   描    述：
  *
  *================================================================*/
@@ -35,6 +35,7 @@ static void fn2(char *arguments)
 }
 
 uint16_t osGetCPUUsage(void);
+int get_brk_size(void);
 static void fn5(char *arguments)
 {
 	int size = xPortGetFreeHeapSize();
@@ -50,6 +51,7 @@ static void fn5(char *arguments)
 
 	_printf("cpu usage:%d\n", cpu_usage);
 	_printf("free os heap size:%d\n", size);
+	_printf("brk size:%d\n", get_brk_size());
 	_printf("total heap size:%d, free heap size:%d, used:%d, heap count:%d, max heap size:%d\n",
 	        total_heap_size,
 	        total_heap_size - heap_size,
@@ -70,7 +72,7 @@ static void fn5(char *arguments)
 
 	size = 1024;
 
-	os_thread_info = (uint8_t *)os_alloc(size);
+	os_thread_info = (uint8_t *)os_calloc(1, size);
 
 	if(os_thread_info == NULL) {
 		return;
@@ -78,7 +80,15 @@ static void fn5(char *arguments)
 
 	osThreadList(os_thread_info);
 
+	_printf("%-15s\t%s\t%s\t%s\t%s\n", "name", "state", "prio", "stack", "no");
 	_puts((const char *)os_thread_info);
+
+	vTaskGetRunTimeStats((char *)os_thread_info);
+
+	_printf("\n\n%-15s\t%s\t\t%s\n", "name", "count", "percent");
+	_puts((const char *)os_thread_info);
+
+	_printf("\n");
 
 	os_free(os_thread_info);
 
@@ -141,5 +151,5 @@ static uart_fn_item_t uart_fn_map[] = {
 
 uart_fn_map_info_t uart_fn_map_info = {
 	.uart_fn_map = uart_fn_map,
-	.uart_fn_map_size = sizeof(uart_fn_map) / sizeof(uart_fn_item_t),
+	.uart_fn_map_size = ARRAY_SIZE(uart_fn_map),
 };

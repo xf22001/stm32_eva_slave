@@ -6,7 +6,7 @@
  *   文件名称：probe_tool_handler.c
  *   创 建 者：肖飞
  *   创建日期：2020年03月20日 星期五 12时48分07秒
- *   修改日期：2022年08月12日 星期五 10时23分30秒
+ *   修改日期：2022年08月12日 星期五 15时10分21秒
  *   描    述：
  *
  *================================================================*/
@@ -17,7 +17,6 @@
 #include "lwip/netdb.h"
 #include "lwip/inet.h"
 
-#include "net_client.h"
 #include "flash.h"
 #include "iap.h"
 #include "app.h"
@@ -171,7 +170,7 @@ static int p_host(struct hostent *ent)
 static void get_host_by_name(char *content, uint32_t size)
 {
 	struct hostent *ent;
-	char *hostname = (char *)os_alloc(RECV_BUFFER_SIZE);
+	char *hostname = (char *)os_calloc(1, RECV_BUFFER_SIZE);
 	int ret;
 	int fn;
 	int catched;
@@ -207,6 +206,7 @@ static void fn4(request_t *request)
 }
 
 uint16_t osGetCPUUsage(void);
+int get_brk_size(void);
 static void fn5(request_t *request)
 {
 	int size = xPortGetFreeHeapSize();
@@ -222,6 +222,7 @@ static void fn5(request_t *request)
 
 	_printf("cpu usage:%d\n", cpu_usage);
 	_printf("free os heap size:%d\n", size);
+	_printf("brk size:%d\n", get_brk_size());
 	_printf("total heap size:%d, free heap size:%d, used:%d, heap count:%d, max heap size:%d\n",
 	        total_heap_size,
 	        total_heap_size - heap_size,
@@ -242,7 +243,7 @@ static void fn5(request_t *request)
 
 	size = 1024;
 
-	os_thread_info = (uint8_t *)os_alloc(size);
+	os_thread_info = (uint8_t *)os_calloc(1, size);
 
 	if(os_thread_info == NULL) {
 		return;
@@ -250,7 +251,15 @@ static void fn5(request_t *request)
 
 	osThreadList(os_thread_info);
 
+	_printf("%-15s\t%s\t%s\t%s\t%s\n", "name", "state", "prio", "stack", "no");
 	_puts((const char *)os_thread_info);
+
+	vTaskGetRunTimeStats((char *)os_thread_info);
+
+	_printf("\n\n%-15s\t%s\t\t%s\n", "name", "count", "percent");
+	_puts((const char *)os_thread_info);
+
+	_printf("\n");
 
 	os_free(os_thread_info);
 
@@ -263,46 +272,6 @@ static void fn5(request_t *request)
 
 static void fn6(request_t *request)
 {
-	char *content = (char *)(request + 1);
-	char protocol[8];
-	int fn;
-	int catched;
-	int ret = 0;
-	net_client_info_t *net_client_info = get_net_client_info();
-
-	if(net_client_info == NULL) {
-		return;
-	}
-
-	set_client_state(net_client_info, CLIENT_SUSPEND);
-
-	ret = sscanf(content, "%d %7s%n", &fn, protocol, &catched);
-
-	if(ret == 2) {
-		app_info_t *app_info = get_app_info();
-
-		OS_ASSERT(app_info != NULL);
-
-		_printf("protocol:%s!\n", protocol);
-
-		if(strcmp(protocol, "default") == 0) {
-			app_info->mechine_info.request_type = REQUEST_TYPE_DEFAULT;
-			app_save_config();
-		} else if(strcmp(protocol, "sse") == 0) {
-			app_info->mechine_info.request_type = REQUEST_TYPE_SSE;
-			app_save_config();
-		} else if(strcmp(protocol, "ocpp") == 0) {
-			app_info->mechine_info.request_type = REQUEST_TYPE_OCPP_1_6;
-			app_save_config();
-		} else {
-			app_info->mechine_info.request_type = REQUEST_TYPE_NONE;
-			app_save_config();
-		}
-	} else {
-		_printf("no protocol!\n");
-	}
-
-	set_client_state(net_client_info, CLIENT_REINIT);
 }
 
 static void fn7(request_t *request)
@@ -351,37 +320,6 @@ static void fn10(request_t *request)
 //11 0 udp://112.74.40.227:12345
 static void fn11(request_t *request)
 {
-	app_info_t *app_info = get_app_info();
-	char *content = (char *)(request + 1);
-	int fn;
-	int catched;
-	int ret;
-	net_client_info_t *net_client_info = get_net_client_info();
-	mechine_info_t *buffer = (mechine_info_t *)os_alloc(sizeof(mechine_info_t));
-
-	if(buffer == NULL) {
-		return;
-	}
-
-	if(net_client_info != NULL) {
-		set_client_state(net_client_info, CLIENT_SUSPEND);
-	}
-
-	ret = sscanf(content, "%d %s %s %n", &fn, buffer->device_id, buffer->uri, &catched);
-
-	if(ret == 3) {
-		strcpy(app_info->mechine_info.device_id, buffer->device_id);
-		strcpy(app_info->mechine_info.uri, buffer->uri);
-		app_save_config();
-	}
-
-	os_free(buffer);
-
-	debug("device id:\'%s\', server uri:\'%s\'!", app_info->mechine_info.device_id, app_info->mechine_info.uri);
-
-	if(net_client_info != NULL) {
-		set_client_state(net_client_info, CLIENT_REINIT);
-	}
 }
 
 //12 10.42.0.1 2121 /user.mk anonymous
@@ -476,7 +414,6 @@ static void fn14(request_t *request)
 	}
 }
 
-#include "channel_record.h"
 static void fn15(request_t *request)
 {
 	char *content = (char *)(request + 1);
@@ -490,8 +427,6 @@ static void fn15(request_t *request)
 	debug("ret:%d", ret);
 
 	if(ret == 1) {
-		channel_record_task_info_t *channel_record_task_info = get_or_alloc_channel_record_task_info(0);
-		channel_record_item_page_load_location(channel_record_task_info);
 	}
 }
 
@@ -521,16 +456,11 @@ static void fn17(request_t *request)
 	ret = sscanf(content, "%d %n", &fn, &catched);
 
 	if(ret == 1) {
-		app_set_reset_config();
-		app_save_config();
-		debug("reset config ...");
-		HAL_NVIC_SystemReset();
 	}
 }
 
 static void fn18(request_t *request)
 {
-	start_dump_channels_stats();
 }
 
 static server_item_t server_map[] = {
@@ -556,5 +486,5 @@ static server_item_t server_map[] = {
 
 server_map_info_t server_map_info = {
 	.server_map = server_map,
-	.server_map_size = sizeof(server_map) / sizeof(server_item_t),
+	.server_map_size = ARRAY_SIZE(server_map),
 };
