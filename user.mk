@@ -41,6 +41,7 @@ USER_C_SOURCES += apps/probe_tool_handler.c
 USER_C_SOURCES += apps/channels_config.c
 USER_C_SOURCES += apps/can_config.c
 USER_C_SOURCES += apps/gpio_map.c
+USER_C_SOURCES += apps/power_manager_group_policy_config.c
 ifneq ($(call ifdef_any_of,ENABLE_CXX),)
 USER_CPP_SOURCES += apps/modules/tests/test_cpp.cpp
 endif
