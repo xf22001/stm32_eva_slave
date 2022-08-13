@@ -194,6 +194,7 @@ void app(void const *argument)
 
 	//net_client_add_poll_loop(poll_loop);
 	//ftp_client_add_poll_loop(poll_loop);
+	ntp_client_add_poll_loop(poll_loop);
 
 	while(1) {
 		uint32_t event;
