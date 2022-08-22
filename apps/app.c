@@ -26,6 +26,7 @@
 #include "probe_tool.h"
 #include "net_client.h"
 #include "ftp_client.h"
+#include "ntp_client.h"
 #include "ftpd/ftpd.h"
 #include "usb_upgrade.h"
 #include "usbh_user_callback.h"
