@@ -6,7 +6,7 @@
 #   文件名称：user.mk
 #   创 建 者：肖飞
 #   创建日期：2019年10月25日 星期五 13时04分38秒
-#   修改日期：2022年08月12日 星期五 10时25分32秒
+#   修改日期：2022年08月22日 星期一 14时50分25秒
 #   描    述：
 #
 #================================================================
@@ -92,6 +92,7 @@ USER_C_SOURCES += apps/modules/app/ntc_temperature.c
 USER_C_SOURCES += apps/modules/app/can_command.c
 USER_C_SOURCES += apps/modules/app/usb_upgrade.c
 USER_C_SOURCES += apps/modules/app/firmware_upgrade_internal_flash.c
+USER_C_SOURCES += apps/modules/app/charger/channels_config_helper.c
 USER_C_SOURCES += apps/modules/app/charger/channels.c
 USER_C_SOURCES += apps/modules/app/charger/channel.c
 ifneq ($(call ifdef_any_of,CHARGER_CHANNEL_NATIVE),)
@@ -108,8 +109,6 @@ USER_C_SOURCES += apps/modules/app/charger/channels_comm_proxy.c
 endif
 ifneq ($(call ifdef_any_of,MULTI_CHARGE_PROXY),)
 USER_C_SOURCES += apps/modules/app/charger/multi_charge_comm_proxy.c
-USER_C_SOURCES += apps/modules/app/charger/multi_charge_comm_proxy_master.c
-USER_C_SOURCES += apps/modules/app/charger/multi_charge_comm_proxy_slave.c
 endif
 USER_C_SOURCES += apps/modules/app/charger/charger.c
 USER_C_SOURCES += apps/modules/app/charger/charger_bms.c
