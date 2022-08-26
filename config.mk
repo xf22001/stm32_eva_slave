@@ -6,7 +6,7 @@
 #   文件名称：config.mk
 #   创 建 者：肖飞
 #   创建日期：2021年08月26日 星期四 11时10分19秒
-#   修改日期：2022年08月19日 星期五 15时30分50秒
+#   修改日期：2022年08月26日 星期五 15时41分02秒
 #   描    述：
 #
 #================================================================
@@ -47,6 +47,7 @@ CONFIG_LIST += MULTI_CHARGE_PROXY
 CONFIG_LIST += CHARGER_BMS_HANDLER_GB
 #CONFIG_LIST += CHARGER_BMS_HANDLER_JP
 #CONFIG_LIST += CHARGER_BMS_HANDLER_CCS
+#CONFIG_LIST += CHARGER_BMS_HANDLER_GB_MULTI_CHARGE
 #CONFIG_LIST += CHARGER_BMS_HANDLER_AC
 #CONFIG_LIST += CHARGER_BMS_HANDLER_NOBMS
 
