@@ -43,7 +43,6 @@ void MX_MBEDTLS_Init(void)
    /**
   */
   /* USER CODE BEGIN 3 */
-  mbedtls_net_init(NULL);
   /* USER CODE END 3 */
 
 }
@@ -60,4 +59,3 @@ void MX_MBEDTLS_Init(void)
   * @}
   */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

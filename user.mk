@@ -6,7 +6,7 @@
 #   文件名称：user.mk
 #   创 建 者：肖飞
 #   创建日期：2019年10月25日 星期五 13时04分38秒
-#   修改日期：2022年08月26日 星期五 15时32分32秒
+#   修改日期：2022年08月29日 星期一 13时33分17秒
 #   描    述：
 #
 #================================================================
@@ -24,9 +24,6 @@ USER_C_INCLUDES += -Iapps/modules/app
 USER_C_INCLUDES += -Iapps/modules/app/charger
 USER_C_INCLUDES += -Iapps/modules/app/power_modules
 USER_C_INCLUDES += -Iapps/modules/app/power_manager
-USER_C_INCLUDES += -Iapps/modules/app/ftpd
-USER_C_INCLUDES += -Iapps/modules/app/vfs_disk
-USER_C_INCLUDES += -Iapps/modules/app/net_client
 USER_C_INCLUDES += -Iapps/modules/tests
 USER_C_INCLUDES += -IcJSON
 ifneq ($(call ifdef_any_of,ENABLE_CXX),)
@@ -37,7 +34,6 @@ USER_C_SOURCES += apps/os_memory.c
 USER_C_SOURCES += apps/os_random.c
 USER_C_SOURCES += apps/app.c
 USER_C_SOURCES += apps/uart_debug_handler.c
-USER_C_SOURCES += apps/probe_tool_handler.c
 USER_C_SOURCES += apps/channels_config.c
 USER_C_SOURCES += apps/can_config.c
 USER_C_SOURCES += apps/gpio_map.c
@@ -46,51 +42,14 @@ ifneq ($(call ifdef_any_of,ENABLE_CXX),)
 USER_CPP_SOURCES += apps/modules/tests/test_cpp.cpp
 endif
 
-USER_C_SOURCES += apps/modules/app/poll_loop.c
-USER_C_SOURCES += apps/modules/app/request.c
-USER_C_SOURCES += apps/modules/app/probe_tool.c
 USER_C_SOURCES += apps/modules/app/uart_debug.c
-USER_C_SOURCES += apps/modules/app/file_log.c
-USER_C_SOURCES += apps/modules/app/net_client/net_client.c
-ifneq ($(call ifdef_any_of,NET_CLIENT_PROTOCOL_UDP),)
-USER_C_SOURCES += apps/modules/app/net_client/net_protocol_udp.c
-endif
-ifneq ($(call ifdef_any_of,NET_CLIENT_PROTOCOL_TCP),)
-USER_C_SOURCES += apps/modules/app/net_client/net_protocol_tcp.c
-endif
-ifneq ($(call ifdef_any_of,NET_CLIENT_PROTOCOL_TLS),)
-USER_C_SOURCES += apps/modules/app/net_client/net_protocol_tls.c
-endif
-ifneq ($(call ifdef_any_of,NET_CLIENT_REQUEST_DEFAULT),)
-USER_C_SOURCES += apps/modules/app/net_client/request_default.c
-endif
-ifneq ($(call ifdef_any_of,NET_CLIENT_REQUEST_SSE),)
-USER_C_SOURCES += apps/modules/app/net_client/request_sse.c
-endif
-ifneq ($(call ifdef_any_of,NET_CLIENT_REQUEST_OCPP_1_6),)
-USER_C_SOURCES += apps/modules/app/net_client/test_https.c
-USER_C_SOURCES += apps/modules/app/net_client/https.c
-USER_C_SOURCES += apps/modules/app/net_client/websocket.c
-USER_C_SOURCES += apps/modules/app/net_client/request_ocpp_1_6.c
-endif
-USER_C_SOURCES += apps/modules/app/ftp_client.c
-USER_C_SOURCES += apps/modules/app/ntp_client.c
-USER_C_SOURCES += apps/modules/app/net_callback.c
-USER_C_SOURCES += apps/modules/app/ftpd/ftpd.c
-#USER_C_SOURCES += apps/modules/app/vfs_disk/pseudo_disk_io.c
-#USER_C_INCLUDES += -Iapps/modules/app/ftpd/vfs_ramdisk
-#C_SOURCES := $(filter-out Middlewares/Third_Party/FatFs/src/diskio.c ,$(C_SOURCES))
-USER_C_SOURCES += apps/modules/app/vfs_disk/vfs.c
-USER_C_SOURCES += apps/modules/app/mt_file.c
 USER_C_SOURCES += apps/modules/app/can_data_task.c
 USER_C_SOURCES += apps/modules/app/uart_data_task.c
 USER_C_SOURCES += apps/modules/app/duty_cycle_pattern.c
-USER_C_SOURCES += apps/modules/app/usbh_user_callback.c
 USER_C_SOURCES += apps/modules/app/early_sys_callback.c
 USER_C_SOURCES += apps/modules/app/connect_state.c
 USER_C_SOURCES += apps/modules/app/ntc_temperature.c
 USER_C_SOURCES += apps/modules/app/can_command.c
-USER_C_SOURCES += apps/modules/app/usb_upgrade.c
 USER_C_SOURCES += apps/modules/app/firmware_upgrade_internal_flash.c
 USER_C_SOURCES += apps/modules/app/charger/channels_config_helper.c
 USER_C_SOURCES += apps/modules/app/charger/channels.c
@@ -158,7 +117,6 @@ USER_C_SOURCES += apps/modules/hardware/hw_adc.c
 USER_C_SOURCES += apps/modules/hardware/modbus_slave_txrx.c
 USER_C_SOURCES += apps/modules/hardware/modbus_master_txrx.c
 USER_C_SOURCES += apps/modules/hardware/modbus_spec.c
-USER_C_SOURCES += apps/modules/drivers/spi_txrx.c
 USER_C_SOURCES += apps/modules/drivers/can_txrx.c
 USER_C_SOURCES += apps/modules/drivers/can_ops_hal.c
 USER_C_SOURCES += apps/modules/drivers/usart_txrx.c
@@ -167,7 +125,6 @@ USER_C_SOURCES += apps/modules/os/callback_chain.c
 USER_C_SOURCES += apps/modules/os/bitmap_ops.c
 USER_C_SOURCES += apps/modules/os/iap.c
 USER_C_SOURCES += apps/modules/os/os_utils.c
-USER_C_SOURCES += apps/modules/os/net_utils.c
 USER_C_SOURCES += apps/modules/os/cpu_utils.c
 USER_C_SOURCES += apps/modules/os/log.c
 USER_C_SOURCES += apps/modules/os/object_class.c

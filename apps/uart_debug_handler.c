@@ -6,7 +6,7 @@
  *   文件名称：uart_debug_handler.c
  *   创 建 者：肖飞
  *   创建日期：2020年05月13日 星期三 13时18分00秒
- *   修改日期：2022年04月20日 星期三 15时03分06秒
+ *   修改日期：2022年08月29日 星期一 13时31分44秒
  *   描    述：
  *
  *================================================================*/
@@ -99,54 +99,10 @@ static void fn5(char *arguments)
 	}
 }
 
-#include "net_client.h"
-static void fn6(char *arguments)
-{
-	char protocol[8];
-	int catched;
-	int ret = 0;
-	net_client_info_t *net_client_info = get_net_client_info();
-
-	if(net_client_info == NULL) {
-		return;
-	}
-
-	set_client_state(net_client_info, CLIENT_SUSPEND);
-
-	ret = sscanf(arguments, "%10s%n", protocol, &catched);
-
-	if(ret == 1) {
-		app_info_t *app_info = get_app_info();
-
-		OS_ASSERT(app_info != NULL);
-
-		_printf("protocol:%s!\n", protocol);
-
-		if(strcmp(protocol, "default") == 0) {
-			app_info->mechine_info.request_type = REQUEST_TYPE_DEFAULT;
-			app_save_config();
-		} else if(strcmp(protocol, "sse") == 0) {
-			app_info->mechine_info.request_type = REQUEST_TYPE_SSE;
-			app_save_config();
-		} else if(strcmp(protocol, "ocpp") == 0) {
-			app_info->mechine_info.request_type = REQUEST_TYPE_OCPP_1_6;
-			app_save_config();
-		} else {
-			app_info->mechine_info.request_type = REQUEST_TYPE_NONE;
-			app_save_config();
-		}
-	} else {
-		_printf("no protocol!\n");
-	}
-
-	set_client_state(net_client_info, CLIENT_REINIT);
-}
-
 static uart_fn_item_t uart_fn_map[] = {
 	{1, fn1},
 	{2, fn2},
 	{5, fn5},
-	{6, fn6},
 };
 
 uart_fn_map_info_t uart_fn_map_info = {
