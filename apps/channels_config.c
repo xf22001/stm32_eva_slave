@@ -6,13 +6,14 @@
  *   文件名称：channels_config.c
  *   创 建 者：肖飞
  *   创建日期：2021年01月18日 星期一 09时26分44秒
- *   修改日期：2022年08月29日 星期一 13时30分16秒
+ *   修改日期：2022年08月30日 星期二 16时18分18秒
  *   描    述：
  *
  *================================================================*/
 #include "channels_config.h"
 #include "os_utils.h"
-#include "power_modules.h"
+#include "ntc_temperature.h"
+#include "main.h"
 
 extern CAN_HandleTypeDef hcan1;
 extern CAN_HandleTypeDef hcan2;
@@ -44,6 +45,16 @@ static channel_config_t channel0_config = {
 	.charger_config = {
 		.charger_type = CHANNEL_CHARGER_BMS_TYPE_GB,
 		.hcan_bms = &hcan2,
+		.output_relay_gpio = relay_6_GPIO_Port,
+		.output_relay_pin = relay_6_Pin,
+		.charger_lock_state_gpio = in_1_GPIO_Port,
+		.charger_lock_state_pin = in_1_Pin,
+		.relay_charger_lock_gpio = relay_3_GPIO_Port,
+		.relay_charger_lock_pin = relay_3_Pin,
+		.charger_auxiliary_power_choose_gpio = relay_4_GPIO_Port,
+		.charger_auxiliary_power_choose_pin = relay_4_Pin,
+		.charger_auxiliary_power_onoff_gpio = relay_5_GPIO_Port,
+		.charger_auxiliary_power_onoff_pin = relay_5_Pin,
 	},
 	.energy_meter_config = {
 		.default_type = ENERGY_METER_TYPE_NONE,
@@ -58,6 +69,9 @@ static channel_config_t channel0_config = {
 		.size = ARRAY_SIZE(function_board_config_item_0_sz),
 		.items = function_board_config_item_0_sz,
 	},
+	.cp_gpio = in_a_cc1_GPIO_Port,
+	.cp_pin = in_a_cc1_Pin,
+	.cp_connect_state = GPIO_PIN_SET,
 };
 
 static channel_config_t *channel_config_sz[] = {
