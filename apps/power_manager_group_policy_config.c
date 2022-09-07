@@ -6,7 +6,7 @@
  *   文件名称：power_manager_group_policy_config.c
  *   创 建 者：肖飞
  *   创建日期：2022年07月22日 星期五 12时30分44秒
- *   修改日期：2022年08月22日 星期一 15时22分47秒
+ *   修改日期：2022年09月06日 星期二 08时56分30秒
  *   描    述：
  *
  *================================================================*/
@@ -85,7 +85,6 @@ void channel_info_reset_default_config(channel_info_t *channel_info)
 	channel_settings->max_output_current = 5000;
 	channel_settings->min_output_current = 3;
 
-	channel_settings->multi_charge_settings.enable = 1;
 	channel_settings->multi_charge_settings.group = 0;
 	channel_settings->multi_charge_settings.id = 0;
 }
